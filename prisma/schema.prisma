@@ -11,13 +11,15 @@ datasource db {
 }
 
 model User {
-  id        String     @id @default(auto()) @map("_id") @db.ObjectId
-  email     String     @unique
-  name      String?
-  birthYear Int?
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  TodoList  TodoList[]
+  id         String       @id @default(auto()) @map("_id") @db.ObjectId
+  email      String       @unique
+  password   String
+  name       String?
+  birthYear  Int?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  TodoList   TodoList[]
+  UserLogger UserLogger[]
 }
 
 model TodoList {
@@ -29,4 +31,13 @@ model TodoList {
   completed   Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model UserLogger {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @db.ObjectId
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
 }

@@ -3,16 +3,6 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  const user = await prisma.user.upsert({
-    where: { email: 'aadityc73@gmail.com' },
-    update: {},
-    create: {
-      email: 'aadityc73@gmail.com',
-      name: 'Aditya Chavan',
-      birthYear: 1997,
-    },
-  });
-
   const todo1 = await prisma.todoList.upsert({
     where: { title: 'learn nestJs' },
     update: {},

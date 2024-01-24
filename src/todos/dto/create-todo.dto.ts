@@ -6,7 +6,4 @@ export class CreateTodoDto {
 
     @ApiProperty()
     description: string
-
-    @ApiProperty()
-    userId: string
 }

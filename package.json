@@ -28,7 +28,7 @@
     "@nestjs/swagger": "^7.1.2",
     "@prisma/client": "^5.0.0",
     "bcrypt": "^5.1.0",
-    "moment": "^2.30.1",
+    "dayjs": "^1.11.10",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
     "swagger-ui-express": "^5.0.0"

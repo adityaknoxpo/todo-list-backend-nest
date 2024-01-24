@@ -9,6 +9,7 @@ import { RegisterUserDto } from './dto/register-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import * as dayjs from 'dayjs';
 
 @Injectable()
 export class AuthService {
@@ -58,7 +59,7 @@ export class AuthService {
       data: {
         token,
         userId: user.id,
-        expiresAt: new Date(),
+        expiresAt: dayjs().add(1, 'days').toDate(),
       },
     });
     // const { password, ...result } = user;
@@ -66,8 +67,6 @@ export class AuthService {
   }
 
   async logout(token) {
-    console.log('token from logout', token);
-    
     if (!token) {
       return new UnauthorizedException();
     }

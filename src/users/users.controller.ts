@@ -14,6 +14,7 @@ import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiTags, ApiOkResponse } from '@nestjs/swagger';
 import { UserEntity } from './entities/user.entity';
+import { RequestType } from './dto/user.dto';
 // import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('user')
@@ -35,13 +36,13 @@ export class UsersController {
 
   @Get()
   @ApiOkResponse({ type: UserEntity })
-  findOne(@Request() req) {
+  findOne(@Request() req: RequestType) {
     return this.usersService.findOne(req.user.id);
   }
 
   @Patch()
   @ApiOkResponse({ type: UserEntity })
-  update(@Request() req, @Body() updateUserDto: UpdateUserDto) {
+  update(@Request() req: RequestType, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(req.user.id, updateUserDto);
   }
 

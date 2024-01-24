@@ -5,7 +5,6 @@ import { PrismaModule } from 'src/prisma/prisma.module';
 import { JwtModule } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from 'src/auth/auth.guard';
-import * as moment from 'moment';
 
 @Module({
   controllers: [TodosController],

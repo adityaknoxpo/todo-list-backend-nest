@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -7,10 +7,32 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class TodosService {
   constructor(private prisma: PrismaService) {}
 
-  create(createTodoDto: CreateTodoDto, userId: string) {
-    return this.prisma.todoList.create({
-      data: { ...createTodoDto, userId },
-    });
+  async create(createTodoDto: CreateTodoDto, userId: string) {
+    try {
+      const todo = await this.prisma.todoList.create({
+        data: {
+          title: createTodoDto.title,
+          description: createTodoDto.description,
+          userId,
+        },
+      });
+      return {
+        status_code: 201,
+        data: {
+          todo
+        }
+      }
+      
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
+
+      throw new BadRequestException({
+        status_code: HttpStatus.BAD_REQUEST,
+        message: 'Failed to create todo',
+      });
+    }
   }
 
   findAll(userId: string) {

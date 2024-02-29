@@ -16,14 +16,14 @@ import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { TodoListEntity } from './entities/todo.entity';
 import { RequestType } from 'src/users/dto/user.dto';
 
-@Controller('todos')
+@Controller('todo')
 @ApiTags('TodoList')
 export class TodosController {
   constructor(private readonly todosService: TodosService) {}
 
   @Post()
   @ApiCreatedResponse({ type: TodoListEntity })
-  create(@Body() createTodoDto: CreateTodoDto, @Request() req: RequestType) {
+  create(@Body() createTodoDto: CreateTodoDto, @Request() req) {
     return this.todosService.create(createTodoDto, req.user.id);
   }
 

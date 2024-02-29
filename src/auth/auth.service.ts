@@ -1,5 +1,7 @@
 import {
+  BadRequestException,
   ConflictException,
+  HttpStatus,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -16,23 +18,37 @@ export class AuthService {
   constructor(private prisma: PrismaService, private jwtService: JwtService) {}
 
   async register(registerUserDto: RegisterUserDto) {
-    const user = await this.prisma.user.findUnique({
-      where: { email: registerUserDto.email },
-    });
-    if (user) {
-      return new ConflictException();
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: { email: registerUserDto.email },
+      });
+      if (user) {
+        return new ConflictException();
+      }
+      const hashedPassword = await bcrypt.hash(registerUserDto.password, 10);
+      const data = {
+        ...registerUserDto,
+        password: hashedPassword,
+        name: `${registerUserDto.firstName} ${registerUserDto.lastName}`,
+      };
+      delete data.firstName;
+      delete data.lastName;
+      await this.prisma.user.create({
+        data,
+      });
+
+      return { status_code: 201, message: 'Registered successfully!' };
+      
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
+
+      throw new BadRequestException({
+        status_code: HttpStatus.BAD_REQUEST,
+        message: 'Failed to update business with given id',
+      });
     }
-    const hashedPassword = await bcrypt.hash(registerUserDto.password, 10);
-    const data = {
-      ...registerUserDto,
-      password: hashedPassword,
-      name: `${registerUserDto.firstName} ${registerUserDto.lastName}`,
-    };
-    delete data.firstName;
-    delete data.lastName;
-    return this.prisma.user.create({
-      data,
-    });
   }
 
   async login(loginUserDto: LoginUserDto) {
